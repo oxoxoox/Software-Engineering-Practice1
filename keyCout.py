@@ -1,16 +1,18 @@
 import re
 from sys import argv
 
-
+# read source file and return code
 def read_file(path):
     code = ''
     with open (path,'r',encoding='UTF-8') as file:
         codeList = file.readlines()
     for l in codeList:
         code += l.strip()+' '
+    # remove code's string and annotation
     code = re.sub("\"([^\"]*)\"|\/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/|\/\/.*", "", code)
     return code
 
+# level 1 to count keys
 def cout_keys(code):
     count = {}
     count_sum = 0
@@ -26,6 +28,7 @@ def cout_keys(code):
             count_sum += n
     print("total num: " ,count_sum)
 
+# level 2 to count switch and case
 def cout_switch(code):
     switch_num = 0
     case_num = []
@@ -40,34 +43,15 @@ def cout_switch(code):
     print("switch num: ",switch_num)
     print("case num:"," ".join([str(i) for i in case_num]))
 
-# def search_if(code):
-#     i = re.search(r"[^e]\s+if", code)
-#     return i
-#
-# def search_else_if(code):
-#     j = re.search("else if", code)
-#     return j
-#
-# def search_esle(code):
-#     k = re.search(r"\s*else[{\s][^i]", code)
-#     return k
-
+# level 4 to count if-else and if-elseif-else
 def cout_if_else(code,level):
     if_stack = []
+    # if-else num
     if_else_num1 = 0
+    # if-elseif-else num
     if_else_num2 = 0
     match_else_if = False
-    #reg = r"[^e]\s+if|else if|\s*else[{\s][^i]"
-    # while True:
-    #     i = search_if(code)
-    #     if i:
-    #         if_stack.append(1)
-    #         index_if = i.end()
-    #         j = search_else_if(code[index_if:])
-    #         while j:
-    #             if_stack.append(2)
-    #             j = search_else_if(code[j.end():])
-    #         k = search_else(c)
+    #find all if、elseif、else
     all_list = re.findall(r"else if|\s*else[{\s][^i]|if", code)
     for i in range(len(all_list)):
         if all_list[i] == "if":
@@ -90,6 +74,7 @@ def cout_if_else(code,level):
         print("if-elseif-else num: ",if_else_num2)
 
 if __name__ == '__main__':
+    # read args
     path, level = argv[1], int(argv[2])
     code = read_file(path)
     if level == 1:
