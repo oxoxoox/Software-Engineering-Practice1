@@ -1,4 +1,5 @@
 import re
+from sys import argv
 
 
 def read_file(path):
@@ -51,7 +52,7 @@ def cout_switch(code):
 #     k = re.search(r"\s*else[{\s][^i]", code)
 #     return k
 
-def cout_if_else(code):
+def cout_if_else(code,level):
     if_stack = []
     if_else_num1 = 0
     if_else_num2 = 0
@@ -85,12 +86,18 @@ def cout_if_else(code):
             else:
                 if_else_num1 += 1
     print("if-else num: ",if_else_num1)
-    print("if-elseif-else num: ",if_else_num2)
+    if level == 4:
+        print("if-elseif-else num: ",if_else_num2)
 
 if __name__ == '__main__':
-    path = "data/code1.c"
-    # level = input()
+    path, level = argv[1], int(argv[2])
     code = read_file(path)
-    cout_keys(code)
-    cout_switch(code)
-    cout_if_else(code)
+    if level == 1:
+        cout_keys(code)
+    elif level == 2:
+        cout_keys(code)
+        cout_switch(code)
+    else:
+        cout_keys(code)
+        cout_switch(code)
+        cout_if_else(code, level)
