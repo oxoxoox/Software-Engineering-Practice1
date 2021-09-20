@@ -13,7 +13,7 @@ def read_file(path):
     return code
 
 # level 1 to count keys
-def cout_keys(code):
+def count_keys(code):
     count = {}
     count_sum = 0
     key_list = ['auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do',
@@ -26,10 +26,10 @@ def cout_keys(code):
         if n != 0:
             count[key] = n
             count_sum += n
-    print("total num: " ,count_sum)
+    return count_sum
 
 # level 2 to count switch and case
-def cout_switch(code):
+def count_switch(code):
     switch_num = 0
     case_num = []
     switch_list = re.finditer(r"\sswitch\([^)]*\)\s*{",code)
@@ -40,11 +40,10 @@ def cout_switch(code):
         case_num.append(len(case_list))
     for j in range(switch_num-1):
         case_num[j] = case_num[j]-case_num[j+1]
-    print("switch num: ",switch_num)
-    print("case num:"," ".join([str(i) for i in case_num]))
+    return switch_num,case_num
 
 # level 4 to count if-else and if-elseif-else
-def cout_if_else(code,level):
+def count_if_else(code):
     if_stack = []
     # if-else num
     if_else_num1 = 0
@@ -69,20 +68,27 @@ def cout_if_else(code,level):
                 match_else_if = False
             else:
                 if_else_num1 += 1
-    print("if-else num: ",if_else_num1)
-    if level == 4:
-        print("if-elseif-else num: ",if_else_num2)
+    return if_else_num1,if_else_num2
+
+
+
+def output(level):
+    if level >= 1:
+        keys_num = count_keys(code)
+        print("total num: ", keys_num)
+    if level >= 2:
+        switch_num,case_num = count_switch(code)
+        print("switch num: ", switch_num)
+        print("case num:", " ".join([str(i) for i in case_num]))
+    if level >= 3:
+        if_else_num1,if_else_num2 = count_if_else(code, level)
+        print("if-else num: ", if_else_num1)
+    else:
+        if_else_num1, if_else_num2 = count_if_else(code, level)
+        print("if-elseif-else num: ", if_else_num2)
 
 if __name__ == '__main__':
     # read args
     path, level = argv[1], int(argv[2])
     code = read_file(path)
-    if level == 1:
-        cout_keys(code)
-    elif level == 2:
-        cout_keys(code)
-        cout_switch(code)
-    else:
-        cout_keys(code)
-        cout_switch(code)
-        cout_if_else(code, level)
+    output(level)

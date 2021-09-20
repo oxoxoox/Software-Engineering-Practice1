@@ -22,7 +22,12 @@ int main(){
             break;
     }
     if(i<0){
-        if(i<-1){}
+        if(i<-1){
+            if(i){
+            }
+            else{
+            }
+        }
         else{}
     }
     else if(i>0){
